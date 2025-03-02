@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Form World</title>
+    <link rel="stylesheet" href="../style/inputEvent.css">
+</head>
+<body>
+<div class="contents">
+    <h2 align="center">Input Event Form</h2>
+    <div class="formContent">
+        <form action="" id="formDataDiri" autocomplete="off">
+            <div class="form-element" id="fieldName">
+                <label for="inputNama">Nama Panggilan: </label><br>
+                <input type="text" name="nama" id="inputNama" placeholder="Nama panggilan Anda" maxlength="15"><br>
+                <label id="notifikasiSisaKarakter">Sisa karakter: <span id="sisaKarakter"></span></label>
+            </div>
+            <div class="form-element" id="fieldCopy">
+                <label for="inputCopy"><i>Copy</i> tulisan ini: </label><br>
+                <input type="text" name="copy" id="inputCopy" value="Hello World!" readonly><br>
+            </div>
+            <div class="form-element" id="fieldPaste">
+                <label for="inputPaste"><i>Paste</i> tulisan di sini: </label><br>
+                <input type="text" name="paste" id="inputPaste" placeholder="Paste sesuatu di sini"><br>
+            </div>
+            <div class="form-element" id="fieldCaptcha">
+                <label for="inputCaptcha">Tulis <i>captcha</i> berikut.</label><br>
+                <img src="https://i.ibb.co/yy59QPB/Captcha.png" alt="Captcha"><br>
+                <input type="text" name="captcha" id="inputCaptcha" placeholder="Tulis captcha di sini"><br>
+                <p>Tekan Enter pada keyboard jika sudah selesai menulis <i>captcha</i></p>
+            </div>
+            <div class="form-element" style="text-align: center">
+                <input type="submit" value="Submit Data" id="submitButton" disabled>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../script/inputEvent.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event World</title>
+    <style>
+        .contents {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid black;
+            padding: 15px;
+        }
+
+        #generateButton {
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="contents" align="center" hidden>
+    <button id="incrementButton">Tekan Aku :)</button>
+    <h3>Kamu sudah menekan tombol diatas <span id="count">0</span></h3>
+</div>
+
+<script>
+    function increment() {
+        document.getElementById('count').innerText++;
+
+        if (document.getElementById('count').innerText === '7') {
+            const hiddenMessage = document.createElement('h4');
+            hiddenMessage.innerText = 'Selamat! Anda menemukan hadiah tersembunyi...';
+
+            const image = document.createElement('img');
+            image.setAttribute('src', '../AssetImage/sorasaki-hina-1.jpeg');
+
+            const contents = document.querySelector('.contents');
+            contents.appendChild(hiddenMessage).appendChild(image);
+        }
+    }
+
+    function welcome() {
+        alert(`Sim salabim muncullah elemen-elemen HTML!`);
+        const contents = document.querySelector('.contents');
+        contents.removeAttribute('hidden');
+    }
+
+    // method addEventListener
+    window.addEventListener('load', welcome);
+    document.getElementById('incrementButton').addEventListener('click', increment);
+</script>
+</body>
+</html>
