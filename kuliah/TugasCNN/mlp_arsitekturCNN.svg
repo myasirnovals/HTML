@@ -1,0 +1,70 @@
+<svg width="600" height="300" xmlns="http://www.w3.org/2000/svg">
+    <!-- Input neurons -->
+    <g>
+        <text x="20" y="20" font-size="16">Input Layer (30 neuron)</text>
+        <g>
+            <!-- 30 input neurons -->
+            <g>
+                <circle cx="60" cy="50" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="70" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="90" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="110" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="130" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="150" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="170" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="190" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="210" r="7" fill="#90caf9"/>
+                <circle cx="60" cy="230" r="7" fill="#90caf9"/>
+                <!-- titik-titik -->
+                <text x="55" y="255" font-size="18">...</text>
+                <circle cx="60" cy="280" r="7" fill="#90caf9"/>
+            </g>
+        </g>
+    </g>
+
+    <!-- Hidden neurons -->
+    <g>
+        <text x="220" y="20" font-size="16">Hidden Layer (8 neuron, ReLU)</text>
+        <g>
+            <circle cx="250" cy="70" r="10" fill="#a5d6a7"/>
+            <circle cx="250" cy="110" r="10" fill="#a5d6a7"/>
+            <circle cx="250" cy="150" r="10" fill="#a5d6a7"/>
+            <circle cx="250" cy="190" r="10" fill="#a5d6a7"/>
+            <circle cx="250" cy="230" r="10" fill="#a5d6a7"/>
+            <!-- titik-titik -->
+            <text x="245" y="255" font-size="18">...</text>
+            <circle cx="250" cy="280" r="10" fill="#a5d6a7"/>
+        </g>
+    </g>
+
+    <!-- Output neuron -->
+    <g>
+        <text x="400" y="20" font-size="16">Output Layer (1 neuron, sigmoid)</text>
+        <circle cx="450" cy="150" r="13" fill="#ffcc80"/>
+    </g>
+
+    <!-- Connections Input to Hidden -->
+    <g stroke="#bdbdbd" stroke-width="1">
+        <line x1="67" y1="50" x2="240" y2="70"/>
+        <line x1="67" y1="70" x2="240" y2="70"/>
+        <line x1="67" y1="90" x2="240" y2="110"/>
+        <line x1="67" y1="110" x2="240" y2="110"/>
+        <line x1="67" y1="130" x2="240" y2="150"/>
+        <line x1="67" y1="150" x2="240" y2="150"/>
+        <line x1="67" y1="170" x2="240" y2="190"/>
+        <line x1="67" y1="190" x2="240" y2="190"/>
+        <line x1="67" y1="210" x2="240" y2="230"/>
+        <line x1="67" y1="230" x2="240" y2="230"/>
+        <line x1="67" y1="280" x2="240" y2="280"/>
+    </g>
+
+    <!-- Connections Hidden to Output -->
+    <g stroke="#bdbdbd" stroke-width="1">
+        <line x1="260" y1="70" x2="437" y2="150"/>
+        <line x1="260" y1="110" x2="437" y2="150"/>
+        <line x1="260" y1="150" x2="437" y2="150"/>
+        <line x1="260" y1="190" x2="437" y2="150"/>
+        <line x1="260" y1="230" x2="437" y2="150"/>
+        <line x1="260" y1="280" x2="437" y2="150"/>
+    </g>
+</svg>

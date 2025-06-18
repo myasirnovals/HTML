@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animasi Konvolusi 2D</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .matrix, .kernel, .output {
+            border-collapse: collapse;
+            margin: 10px;
+        }
+
+        .matrix td, .output td {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #333;
+            text-align: center;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+
+        .kernel td {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #555;
+            text-align: center;
+            font-size: 14px;
+            background: #eef;
+        }
+
+        .highlight {
+            background: #ffeb3b !important;
+        }
+
+        .calc {
+            background: #90ee90 !important;
+        }
+
+        .output {
+            margin-left: 40px;
+        }
+
+        .step {
+            margin: 20px 0 10px 0;
+            font-size: 18px;
+        }
+
+        button {
+            padding: 8px 18px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .explain {
+            margin-top: 10px;
+            min-height: 40px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .relu {
+            background: #b3e5fc !important;
+        }
+
+        .pool {
+            background: #ffcdd2 !important;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Animasi Konvolusi 2D (Langkah demi Langkah)</h2>
+<div class="container">
+    <table class="matrix" id="inputMatrix"></table>
+    <div>
+        <div>Kernel</div>
+        <table class="kernel" id="kernel"></table>
+    </div>
+    <table class="output" id="outputMatrix"></table>
+</div>
+<div class="step" id="stepText"></div>
+<button onclick="nextStep()">Next Step</button>
+<button onclick="resetAnim()">Reset</button>
+<div class="explain" id="explain">
+    Fungsi aktivasi <b>ReLU</b> (Rectified Linear Unit) mengubah semua nilai negatif menjadi 0, dan membiarkan nilai
+    positif tetap.
+    <br>
+    Rumus: <b>ReLU(x) = max(0, x)</b>
+</div>
+
+<script>
+    const input = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 0, 1, 0, 0, 1, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0],
+        [0, 1, 0, 0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0, 1, 0, 0],
+        [0, 0, 0, 1, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    const kernel = [
+        [-1, 0, -1],
+        [0.5, 1, 0.5],
+        [0, 1, 0]
+    ];
+    const n = 8, k = 3, outN = n - k + 1;
+    let output = Array.from({length: outN}, () => Array(outN).fill(''));
+    let reluOut = Array.from({length: outN}, () => Array(outN).fill(''));
+    let poolN = outN - 2 + 1; // untuk pooling 2x2 stride 1
+    let poolOut = Array.from({length: poolN}, () => Array(poolN).fill(''));
+    let step = 0;
+    let phase = 0; // 0: konvolusi, 1: ReLU, 2: Max Pooling
+
+    function drawMatrix() {
+        let html = '';
+        for (let i = 0; i < n; i++) {
+            html += '<tr>';
+            for (let j = 0; j < n; j++) {
+                html += `<td id="cell-${i}-${j}">${input[i][j]}</td>`;
+            }
+            html += '</tr>';
+        }
+        document.getElementById('inputMatrix').innerHTML = html;
+    }
+
+    function drawKernel() {
+        let html = '';
+        for (let i = 0; i < 3; i++) {
+            html += '<tr>';
+            for (let j = 0; j < 3; j++) {
+                html += `<td>${kernel[i][j]}</td>`;
+            }
+            html += '</tr>';
+        }
+        document.getElementById('kernel').innerHTML = html;
+    }
+
+    function drawOutput(matrix = output, highlightClass = '') {
+        let outLen = matrix.length;
+        let html = '';
+        for (let i = 0; i < outLen; i++) {
+            html += '<tr>';
+            for (let j = 0; j < outLen; j++) {
+                html += `<td id="outcell-${i}-${j}" class="${highlightClass}">${matrix[i][j]}</td>`;
+            }
+            html += '</tr>';
+        }
+        document.getElementById('outputMatrix').innerHTML = html;
+    }
+
+    function clearHighlight() {
+        for (let i = 0; i < n; i++)
+            for (let j = 0; j < n; j++)
+                document.getElementById(`cell-${i}-${j}`).className = '';
+        for (let i = 0; i < outN; i++)
+            for (let j = 0; j < outN; j++)
+                if (document.getElementById(`outcell-${i}-${j}`))
+                    document.getElementById(`outcell-${i}-${j}`).className = '';
+    }
+
+    function nextStep() {
+        if (phase === 0) { // Konvolusi
+            if (step >= outN * outN) {
+                phase = 1;
+                step = 0;
+                document.getElementById('stepText').innerText = `Semua konvolusi selesai. Klik Next Step untuk ReLU.`;
+                document.getElementById('explain').innerText = '';
+                return;
+            }
+            clearHighlight();
+            let i = Math.floor(step / outN), j = step % outN;
+            // Highlight area
+            for (let ki = 0; ki < k; ki++)
+                for (let kj = 0; kj < k; kj++)
+                    document.getElementById(`cell-${i + ki}-${j + kj}`).className = 'highlight';
+            document.getElementById(`outcell-${i}-${j}`).className = 'calc';
+
+            // Calculate value
+            let sum = 0, explain = '';
+            for (let ki = 0; ki < k; ki++) {
+                for (let kj = 0; kj < k; kj++) {
+                    let a = input[i + ki][j + kj], b = kernel[ki][kj];
+                    let s = a * b;
+                    sum += s;
+                    explain += `(${a}×${b})${(ki < k - 1 || kj < k - 1) ? ' + ' : ''}`;
+                }
+            }
+            output[i][j] = sum;
+            drawOutput(output);
+            document.getElementById('stepText').innerText = `Konvolusi Langkah ${step + 1}: Kernel di posisi baris ${i + 1}, kolom ${j + 1}`;
+            document.getElementById('explain').innerText = `Perhitungan: ${explain} = ${sum}`;
+            step++;
+        } else if (phase === 1) { // ReLU
+            // Terapkan ReLU ke seluruh output
+            for (let i = 0; i < outN; i++) {
+                for (let j = 0; j < outN; j++) {
+                    reluOut[i][j] = output[i][j] < 0 ? 0 : output[i][j];
+                }
+            }
+            drawOutput(reluOut, 'relu');
+            document.getElementById('stepText').innerText = `Aktivasi ReLU diterapkan ke seluruh hasil konvolusi.`;
+            document.getElementById('explain').innerHTML = `
+        <b>ReLU (Rectified Linear Unit)</b> adalah fungsi aktivasi yang mengubah semua nilai negatif menjadi 0 dan membiarkan nilai positif tetap.<br>
+        <b>Rumus:</b> ReLU(x) = max(0, x)<br>
+        <i>Contoh:</i> Jika hasil konvolusi = -4, setelah ReLU menjadi 0. Jika hasil konvolusi = 5, tetap 5.<br>
+        <b>Tujuan:</b> Membuat jaringan dapat menangani non-linearitas dan mempercepat proses pelatihan.<br>
+        <b>Hasil di tabel:</b> Semua nilai negatif sudah diubah menjadi 0.
+    `;
+            phase = 2;
+            step = 0;
+        } else if (phase === 2) { // Max Pooling 2x2 stride 2
+            // Max pooling seluruh blok 2x2
+            for (let i = 0; i < poolN; i++) {
+                for (let j = 0; j < poolN; j++) {
+                    let vals = [
+                        reluOut[i][j],
+                        reluOut[i][j + 1],
+                        reluOut[i + 1][j],
+                        reluOut[i + 1][j + 1]
+                    ];
+                    poolOut[i][j] = Math.max(...vals);
+                }
+            }
+            // Visualisasi pooling
+            let html = '';
+            for (let i = 0; i < poolN; i++) {
+                html += '<tr>';
+                for (let j = 0; j < poolN; j++) {
+                    html += `<td class="pool">${poolOut[i][j]}</td>`;
+                }
+                html += '</tr>';
+            }
+            document.getElementById('outputMatrix').innerHTML = html;
+            document.getElementById('stepText').innerText = `Max Pooling 2x2 (stride 1) diterapkan pada hasil ReLU.`;
+            document.getElementById('explain').innerHTML = `
+    <b>Max Pooling (stride 1)</b> mengambil nilai maksimum dari setiap blok 2x2 yang saling overlap (bergeser satu langkah setiap kali).<br>
+    <b>Output</b> lebih besar dibanding stride 2 karena setiap blok saling tumpang tindih.<br>
+    <i>Contoh:</i> Jika blok 2x2 berisi [3, 5, 1, 2], maka outputnya adalah 5.
+`;
+            phase = 3;
+            step = 0;
+        } else {
+            document.getElementById('stepText').innerText = `Selesai!`;
+            document.getElementById('explain').innerText = `Proses konvolusi, ReLU, dan max pooling selesai.`;
+        }
+    }
+
+    function resetAnim() {
+        step = 0;
+        phase = 0;
+        output = Array.from({length: outN}, () => Array(outN).fill(''));
+        reluOut = Array.from({length: outN}, () => Array(outN).fill(''));
+        poolOut = Array.from({length: poolN}, () => Array(poolN).fill(''));
+        clearHighlight();
+        drawMatrix();
+        drawKernel();
+        drawOutput(output);
+        document.getElementById('stepText').innerText = '';
+        document.getElementById('explain').innerText = '';
+    }
+
+    drawMatrix();
+    drawKernel();
+    drawOutput(output);
+</script>
+</body>
+</html>
