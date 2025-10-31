@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengenalan Mineral</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .page {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* ==================== HALAMAN 1: DISCLAIMER ==================== */
+        #disclaimer-page {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .disclaimer-container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 700px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .disclaimer-container h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .disclaimer-content {
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .tos-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .tos-checkbox input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .tos-checkbox label {
+            font-size: 1.1em;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .btn-continue {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-continue:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-continue:not(:disabled):hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* ==================== HALAMAN 2: START ==================== */
+        #start-page {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .start-container {
+            text-align: center;
+        }
+
+        .start-container h1 {
+            color: white;
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease;
+        }
+
+        .indonesia-map {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease;
+        }
+
+        .indonesia-map svg {
+            max-width: 600px;
+            height: auto;
+        }
+
+        .btn-start {
+            padding: 20px 60px;
+            background: #ffd700;
+            color: #333;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        /* ==================== HALAMAN 3: MENU UTAMA ==================== */
+        #menu-page {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .menu-container {
+            text-align: center;
+        }
+
+        .menu-container h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 50px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 250px;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .menu-card .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .menu-card h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .menu-card p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Bottom Buttons */
+        .bottom-nav {
+            position: fixed;
+            bottom: 30px;
+            width: calc(100% - 80px);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-bottom {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-settings {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-settings:hover {
+            background: #45a049;
+            transform: translateY(-3px);
+        }
+
+        .btn-exit {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-exit:hover {
+            background: #da190b;
+            transform: translateY(-3px);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== HALAMAN 1: DISCLAIMER ==================== -->
+<div class="page active" id="disclaimer-page">
+    <div class="disclaimer-container">
+        <h1>⚠️ Disclaimer</h1>
+        <div class="disclaimer-content">
+            <h3>Syarat dan Ketentuan Penggunaan</h3>
+            <p>Selamat datang di aplikasi Pengenalan Mineral. Dengan menggunakan aplikasi ini, Anda menyetujui syarat dan ketentuan berikut:</p>
+            <br>
+            <p><strong>1. Tujuan Edukasi</strong><br>
+                Aplikasi ini dirancang untuk tujuan edukasi dan pembelajaran mengenai mineral yang ada di Indonesia.</p>
+            <br>
+            <p><strong>2. Penggunaan Data</strong><br>
+                Data dan informasi yang dikumpulkan akan digunakan untuk meningkatkan pengalaman pengguna dan tidak akan dibagikan kepada pihak ketiga.</p>
+            <br>
+            <p><strong>3. Konten</strong><br>
+                Seluruh konten dalam aplikasi ini adalah milik pengembang dan dilindungi hak cipta.</p>
+            <br>
+            <p><strong>4. Perubahan</strong><br>
+                Kami berhak mengubah syarat dan ketentuan ini sewaktu-waktu tanpa pemberitahuan terlebih dahulu.</p>
+            <br>
+            <p>Dengan melanjutkan, Anda menyatakan telah membaca dan menyetujui seluruh syarat dan ketentuan yang berlaku.</p>
+        </div>
+        <div class="tos-checkbox">
+            <input type="checkbox" id="tos-agree" onchange="toggleContinueBtn()">
+            <label for="tos-agree">Saya telah membaca dan menyetujui Syarat dan Ketentuan</label>
+        </div>
+        <button class="btn-continue" id="continue-btn" disabled onclick="goToPage('start-page')">
+            Lanjutkan
+        </button>
+    </div>
+</div>
+
+<!-- ==================== HALAMAN 2: START ==================== -->
+<div class="page" id="start-page">
+    <div class="start-container">
+        <h1>🪨 PENGENALAN MINERAL 🪨</h1>
+        <div class="indonesia-map">
+            <!-- Simplified Indonesia Map SVG -->
+            <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <!-- Simplified map of Indonesia -->
+                <g fill="url(#mapGradient)" stroke="#fff" stroke-width="2">
+                    <!-- Sumatra -->
+                    <ellipse cx="150" cy="150" rx="40" ry="100" transform="rotate(-30 150 150)"/>
+                    <!-- Java -->
+                    <ellipse cx="280" cy="220" rx="80" ry="20"/>
+                    <!-- Kalimantan -->
+                    <ellipse cx="350" cy="140" rx="70" ry="60"/>
+                    <!-- Sulawesi -->
+                    <path d="M 480 120 Q 490 140 480 160 Q 500 170 510 150 Q 520 160 510 180 Q 490 180 480 200" fill="url(#mapGradient)"/>
+                    <!-- Papua -->
+                    <ellipse cx="650" cy="180" rx="90" ry="50" transform="rotate(10 650 180)"/>
+                    <!-- Bali & Nusa Tenggara -->
+                    <ellipse cx="400" cy="230" rx="50" ry="12"/>
+                </g>
+                <text x="400" y="320" font-size="36" fill="#667eea" text-anchor="middle" font-weight="bold">
+                    INDONESIA
+                </text>
+            </svg>
+        </div>
+        <button class="btn-start" onclick="goToPage('menu-page')">
+            MULAI PETUALANGAN
+        </button>
+    </div>
+</div>
+
+<!-- ==================== HALAMAN 3: MENU UTAMA ==================== -->
+<div class="page" id="menu-page">
+    <div class="menu-container">
+        <h1>🏔️ Menu Utama 🏔️</h1>
+        <div class="cards-grid">
+            <!-- Card 1: Kamus Mineral -->
+            <div class="menu-card" onclick="alert('Membuka Kamus Mineral...')">
+                <div class="icon">📖</div>
+                <h3>Kamus Mineral</h3>
+                <p>Pelajari berbagai jenis mineral dan karakteristiknya</p>
+            </div>
+
+            <!-- Card 2: Panduan -->
+            <div class="menu-card" onclick="alert('Membuka Panduan...')">
+                <div class="icon">📚</div>
+                <h3>Panduan</h3>
+                <p>Tutorial lengkap cara bermain dan belajar</p>
+            </div>
+
+            <!-- Card 3: Challenge -->
+            <div class="menu-card" onclick="alert('Membuka Challenge...')">
+                <div class="icon">🏆</div>
+                <h3>Challenge</h3>
+                <p>Uji pengetahuanmu dengan berbagai tantangan</p>
+            </div>
+
+            <!-- Card 4: Map Eksplorasi -->
+            <div class="menu-card" onclick="alert('Membuka Map Eksplorasi...')">
+                <div class="icon">🗺️</div>
+                <h3>Map Eksplorasi</h3>
+                <p>Jelajahi lokasi mineral di seluruh Indonesia</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="btn-bottom btn-settings" onclick="alert('Membuka Pengaturan...')">
+            ⚙️ Pengaturan
+        </button>
+        <button class="btn-bottom btn-exit" onclick="confirmExit()">
+            🚪 Keluar
+        </button>
+    </div>
+</div>
+
+<script>
+    // Function to switch between pages
+    function goToPage(pageId) {
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => page.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    // Toggle continue button based on checkbox
+    function toggleContinueBtn() {
+        const checkbox = document.getElementById('tos-agree');
+        const continueBtn = document.getElementById('continue-btn');
+        continueBtn.disabled = !checkbox.checked;
+    }
+
+    // Confirm exit
+    function confirmExit() {
+        if (confirm('Apakah Anda yakin ingin keluar dari game?')) {
+            alert('Terima kasih telah bermain! 👋');
+            goToPage('start-page');
+        }
+    }
+</script>
+
+</body>
+</html>

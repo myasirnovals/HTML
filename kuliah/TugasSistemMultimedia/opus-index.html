@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengenalan Mineral - Aplikasi Edukasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container untuk setiap halaman */
+        .page {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Halaman Disclaimer */
+        #disclaimerPage {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .disclaimer-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .disclaimer-container h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .disclaimer-text {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            height: 200px;
+            overflow-y: auto;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .tos-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .tos-checkbox input {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .btn-continue {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: not-allowed;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+
+        .btn-continue.enabled {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .btn-continue.enabled:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        /* Halaman Start */
+        #startPage {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            flex-direction: column;
+        }
+
+        .start-container {
+            text-align: center;
+            color: white;
+        }
+
+        .game-title {
+            font-size: 60px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .indonesia-map {
+            width: 600px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-start {
+            padding: 20px 60px;
+            font-size: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Halaman Menu Utama */
+        #mainMenuPage {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .menu-container {
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .menu-title {
+            text-align: center;
+            color: white;
+            font-size: 48px;
+            margin-bottom: 50px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .menu-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .menu-card-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .menu-card h3 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .menu-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .menu-bottom-buttons {
+            position: fixed;
+            bottom: 30px;
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-settings, .btn-exit {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-settings {
+            background: #4a5568;
+            color: white;
+        }
+
+        .btn-exit {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-settings:hover, .btn-exit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Halaman Kamus Mineral */
+        #mineralDictionaryPage {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: none;
+            padding: 20px;
+        }
+
+        #mineralDictionaryPage.active {
+            display: block;
+        }
+
+        .dictionary-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dictionary-header {
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-back:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .dictionary-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            height: calc(100vh - 120px);
+        }
+
+        .mineral-list {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .mineral-list h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .mineral-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .mineral-item:hover {
+            background: #e9ecef;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .mineral-item.active {
+            background: #667eea;
+            color: white;
+            border-left-color: #764ba2;
+        }
+
+        .mineral-detail {
+            flex: 2;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .mineral-detail h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .mineral-info {
+            line-height: 1.8;
+            color: #555;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .btn-speaker {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-speaker:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .btn-speaker.playing {
+            animation: soundWave 1s infinite;
+        }
+
+        @keyframes soundWave {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+<!-- Halaman Disclaimer -->
+<div id="disclaimerPage" class="page active">
+    <div class="disclaimer-container">
+        <h1>📋 Disclaimer</h1>
+        <div class="disclaimer-text">
+            <p><strong>Selamat datang di Aplikasi Pengenalan Mineral!</strong></p>
+            <br>
+            <p>Aplikasi ini dirancang untuk tujuan edukasi dalam mempelajari berbagai jenis mineral yang ada di Indonesia. Dengan menggunakan aplikasi ini, Anda menyetujui ketentuan berikut:</p>
+            <br>
+            <ul style="margin-left: 20px;">
+                <li>Informasi yang disediakan hanya untuk tujuan pembelajaran</li>
+                <li>Konten aplikasi dilindungi hak cipta</li>
+                <li>Pengguna bertanggung jawab atas penggunaan informasi</li>
+                <li>Aplikasi ini tidak untuk tujuan komersial</li>
+            </ul>
+            <br>
+            <p>Dengan mencentang kotak di bawah, Anda menyatakan telah membaca dan menyetujui syarat dan ketentuan penggunaan aplikasi ini.</p>
+        </div>
+        <div class="tos-checkbox">
+            <input type="checkbox" id="tosCheckbox" onchange="toggleContinueButton()">
+            <label for="tosCheckbox">Saya menyetujui Syarat dan Ketentuan Layanan</label>
+        </div>
+        <button id="continueBtn" class="btn-continue" onclick="goToStart()" disabled>Lanjutkan</button>
+    </div>
+</div>
+
+<!-- Halaman Start -->
+<div id="startPage" class="page">
+    <div class="start-container">
+        <h1 class="game-title">Pengenalan Mineral</h1>
+        <div class="indonesia-map">
+            🗾
+        </div>
+        <button class="btn-start" onclick="goToMainMenu()">MULAI PERMAINAN</button>
+    </div>
+</div>
+
+<!-- Halaman Menu Utama -->
+<div id="mainMenuPage" class="page">
+    <div class="menu-container">
+        <h1 class="menu-title">Menu Utama</h1>
+        <div class="menu-grid">
+            <div class="menu-card" onclick="goToMineralDictionary()">
+                <div class="menu-card-icon">📚</div>
+                <h3>Kamus Mineral</h3>
+                <p>Pelajari berbagai jenis mineral di Indonesia</p>
+            </div>
+            <div class="menu-card" onclick="showAlert('Panduan')">
+                <div class="menu-card-icon">📖</div>
+                <h3>Panduan</h3>
+                <p>Cara menggunakan aplikasi ini</p>
+            </div>
+            <div class="menu-card" onclick="showAlert('Challenge')">
+                <div class="menu-card-icon">🏆</div>
+                <h3>Challenge</h3>
+                <p>Uji pengetahuanmu tentang mineral</p>
+            </div>
+            <div class="menu-card" onclick="showAlert('Map Eksplorasi')">
+                <div class="menu-card-icon">🗺️</div>
+                <h3>Map Eksplorasi</h3>
+                <p>Jelajahi lokasi mineral di Indonesia</p>
+            </div>
+        </div>
+        <div class="menu-bottom-buttons">
+            <button class="btn-settings" onclick="showAlert('Pengaturan')">⚙️ Pengaturan</button>
+            <button class="btn-exit" onclick="exitGame()">🚪 Keluar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Halaman Kamus Mineral -->
+<div id="mineralDictionaryPage" class="page">
+    <div class="dictionary-container">
+        <div class="dictionary-header">
+            <button class="btn-back" onclick="goToMainMenu()">← Kembali ke Menu Utama</button>
+        </div>
+        <div class="dictionary-content">
+            <div class="mineral-list">
+                <h2>Daftar Mineral</h2>
+                <div class="mineral-item" onclick="selectMineral(this, 'emas')">
+                    <strong>Emas (Au)</strong>
+                </div>
+                <div class="mineral-item" onclick="selectMineral(this, 'perak')">
+                    <strong>Perak (Ag)</strong>
+                </div>
+                <div class="mineral-item" onclick="selectMineral(this, 'tembaga')">
+                    <strong>Tembaga (Cu)</strong>
+                </div>
+                <div class="mineral-item" onclick="selectMineral(this, 'nikel')">
+                    <strong>Nikel (Ni)</strong>
+                </div>
+                <div class="mineral-item" onclick="selectMineral(this, 'bauksit')">
+                    <strong>Bauksit</strong>
+                </div>
+                <div class="mineral-item" onclick="selectMineral(this, 'timah')">
+                    <strong>Timah (Sn)</strong>
+                </div>
+                <div class="mineral-item" onclick="selectMineral(this, 'batubara')">
+                    <strong>Batu Bara</strong>
+                </div>
+                <div class="mineral-item" onclick="selectMineral(this, 'besi')">
+                    <strong>Bijih Besi (Fe)</strong>
+                </div>
+            </div>
+            <div class="mineral-detail">
+                <h2 id="mineralName">Pilih Mineral</h2>
+                <div class="mineral-info" id="mineralInfo">
+                    <p>Silakan pilih mineral dari daftar di sebelah kiri untuk melihat informasi lengkapnya.</p>
+                </div>
+                <button class="btn-speaker" onclick="toggleAudio()" title="Putar Audio">
+                    🔊
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Data mineral
+    const mineralData = {
+        emas: {
+            name: "Emas (Au)",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Kuning keemasan yang khas<br>
+                • Kilap: Logam<br>
+                • Kekerasan: 2,5-3 skala Mohs<br>
+                • Berat jenis: 19,3 g/cm³<br>
+                • Sifat: Lunak, mudah ditempa, tidak bereaksi dengan asam kecuali aqua regia</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Papua (Grasberg - tambang emas terbesar)<br>
+                • Nusa Tenggara Barat (Batu Hijau)<br>
+                • Sulawesi Utara (Minahasa)<br>
+                • Kalimantan Tengah dan Barat</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Perhiasan dan investasi<br>
+                • Komponen elektronik<br>
+                • Kedokteran gigi<br>
+                • Cadangan devisa negara</p>`
+        },
+        perak: {
+            name: "Perak (Ag)",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Putih metalik mengkilap<br>
+                • Kilap: Logam<br>
+                • Kekerasan: 2,5-3 skala Mohs<br>
+                • Berat jenis: 10,5 g/cm³<br>
+                • Sifat: Konduktor listrik terbaik, antibakteri alami</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Sumatera Barat<br>
+                • Bengkulu<br>
+                • Lampung<br>
+                • Jawa Barat</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Perhiasan dan peralatan makan<br>
+                • Fotografi (film)<br>
+                • Panel surya<br>
+                • Komponen elektronik<br>
+                • Aplikasi medis</p>`
+        },
+        tembaga: {
+            name: "Tembaga (Cu)",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Merah kecoklatan<br>
+                • Kilap: Logam<br>
+                • Kekerasan: 2,5-3 skala Mohs<br>
+                • Berat jenis: 8,96 g/cm³<br>
+                • Sifat: Konduktor listrik dan panas yang baik</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Papua (Grasberg)<br>
+                • Jawa Timur<br>
+                • Sulawesi Selatan<br>
+                • Sumatera Utara</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Kabel listrik<br>
+                • Pipa air<br>
+                • Komponen elektronik<br>
+                • Paduan logam (kuningan, perunggu)<br>
+                • Arsitektur dan konstruksi</p>`
+        },
+        nikel: {
+            name: "Nikel (Ni)",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Putih keperakan<br>
+                • Kilap: Logam<br>
+                • Kekerasan: 4 skala Mohs<br>
+                • Berat jenis: 8,9 g/cm³<br>
+                • Sifat: Tahan korosi, feromagnetik</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Sulawesi Tengah (Morowali)<br>
+                • Sulawesi Tenggara<br>
+                • Maluku Utara (Halmahera)<br>
+                • Papua Barat</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Baja tahan karat (stainless steel)<br>
+                • Baterai isi ulang<br>
+                • Koin<br>
+                • Paduan logam khusus<br>
+                • Katalis industri kimia</p>`
+        },
+        bauksit: {
+            name: "Bauksit",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Merah kecoklatan hingga putih<br>
+                • Tekstur: Berbutir, berlumpur<br>
+                • Kekerasan: 1-3 skala Mohs<br>
+                • Komposisi: Aluminium hidroksida<br>
+                • Sifat: Bijih utama aluminium</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Kalimantan Barat (Ketapang, Sanggau)<br>
+                • Kepulauan Riau (Bintan)<br>
+                • Riau<br>
+                • Kalimantan Tengah</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Produksi aluminium<br>
+                • Industri penerbangan<br>
+                • Kemasan makanan dan minuman<br>
+                • Konstruksi bangunan<br>
+                • Komponen otomotif</p>`
+        },
+        timah: {
+            name: "Timah (Sn)",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Putih keperakan<br>
+                • Kilap: Logam<br>
+                • Kekerasan: 1,5 skala Mohs<br>
+                • Berat jenis: 7,3 g/cm³<br>
+                • Sifat: Lunak, mudah dibentuk, tahan korosi</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Kepulauan Bangka Belitung (produsen terbesar)<br>
+                • Kepulauan Riau (Singkep, Kundur)<br>
+                • Riau daratan</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Pelapis kaleng makanan<br>
+                • Solder elektronik<br>
+                • Paduan perunggu<br>
+                • Pelapis baja anti karat<br>
+                • Industri kaca</p>`
+        },
+        batubara: {
+            name: "Batu Bara",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Hitam hingga coklat kehitaman<br>
+                • Kilap: Submetalik hingga kusam<br>
+                • Kekerasan: 1-2,5 skala Mohs<br>
+                • Jenis: Lignit, Sub-bituminus, Bituminus, Antrasit<br>
+                • Sifat: Mudah terbakar, sumber energi fosil</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Kalimantan Timur (produsen terbesar)<br>
+                • Kalimantan Selatan<br>
+                • Sumatera Selatan<br>
+                • Sumatera Barat<br>
+                • Riau</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Pembangkit listrik tenaga uap<br>
+                • Industri semen<br>
+                • Industri baja<br>
+                • Industri tekstil<br>
+                • Bahan bakar industri</p>`
+        },
+        besi: {
+            name: "Bijih Besi (Fe)",
+            info: `<h3>Karakteristik Fisik:</h3>
+                <p>• Warna: Merah karat hingga hitam<br>
+                • Kilap: Logam hingga kusam<br>
+                • Kekerasan: 5-6,5 skala Mohs<br>
+                • Jenis: Hematit, Magnetit, Limonit<br>
+                • Sifat: Magnetik (magnetit), berat</p>
+
+                <h3>Lokasi di Indonesia:</h3>
+                <p>• Kalimantan Selatan<br>
+                • Sulawesi Selatan<br>
+                • Jawa Tengah (Cilacap)<br>
+                • Lampung<br>
+                • Sumatera Barat</p>
+
+                <h3>Kegunaan:</h3>
+                <p>• Produksi baja<br>
+                • Konstruksi bangunan<br>
+                • Industri otomotif<br>
+                • Rel kereta api<br>
+                • Peralatan dan mesin industri</p>`
+        }
+    };
+
+    let currentPage = 'disclaimerPage';
+    let isAudioPlaying = false;
+
+    function toggleContinueButton() {
+        const checkbox = document.getElementById('tosCheckbox');
+        const continueBtn = document.getElementById('continueBtn');
+
+        if (checkbox.checked) {
+            continueBtn.disabled = false;
+            continueBtn.classList.add('enabled');
+        } else {
+            continueBtn.disabled = true;
+            continueBtn.classList.remove('enabled');
+        }
+    }
+
+    function goToStart() {
+        changePage('startPage');
+    }
+
+    function goToMainMenu() {
+        changePage('mainMenuPage');
+    }
+
+    function goToMineralDictionary() {
+        changePage('mineralDictionaryPage');
+    }
+
+    function changePage(pageId) {
+        // Sembunyikan halaman aktif
+        document.getElementById(currentPage).classList.remove('active');
+
+        // Tampilkan halaman baru
+        setTimeout(() => {
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId;
+        }, 100);
+    }
+
+    function selectMineral(element, mineralId) {
+        // Hapus class active dari semua item
+        document.querySelectorAll('.mineral-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Tambah class active ke item yang dipilih
+        element.classList.add('active');
+
+        // Update konten detail mineral
+        const mineral = mineralData[mineralId];
+        document.getElementById('mineralName').textContent = mineral.name;
+        document.getElementById('mineralInfo').innerHTML = mineral.info;
+    }
+
+    function toggleAudio() {
+        const speakerBtn = document.querySelector('.btn-speaker');
+
+        if (!isAudioPlaying) {
+            speakerBtn.classList.add('playing');
+            speakerBtn.innerHTML = '🔇';
+            isAudioPlaying = true;
+
+            // Simulasi audio playing
+            alert('Audio penjelasan mineral sedang diputar...');
+
+            // Auto stop setelah 3 detik (simulasi)
+            setTimeout(() => {
+                speakerBtn.classList.remove('playing');
+                speakerBtn.innerHTML = '🔊';
+                isAudioPlaying = false;
+            }, 3000);
+        } else {
+            speakerBtn.classList.remove('playing');
+            speakerBtn.innerHTML = '🔊';
+            isAudioPlaying = false;
+            alert('Audio dihentikan');
+        }
+    }
+
+    function showAlert(feature) {
+        alert(`Fitur "${feature}" akan segera hadir!`);
+    }
+
+    function exitGame() {
+        if (confirm('Apakah Anda yakin ingin keluar dari aplikasi?')) {
+            alert('Terima kasih telah menggunakan Aplikasi Pengenalan Mineral!');
+            window.close();
+            // Jika window.close() tidak bekerja, kembali ke halaman disclaimer
+            changePage('disclaimerPage');
+            // Reset checkbox
+            document.getElementById('tosCheckbox').checked = false;
+            toggleContinueButton();
+        }
+    }
+
+    // Prevent right-click context menu (optional)
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // ESC key to go back
+        if (e.key === 'Escape') {
+            if (currentPage === 'mineralDictionaryPage') {
+                goToMainMenu();
+            } else if (currentPage === 'mainMenuPage') {
+                exitGame();
+            }
+        }
+    });
+</script>
+</body>
+</html>
