@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Charter - FIGAmes Game Development Company</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .project-info {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-box {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-box strong {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon {
+            font-size: 1.2em;
+        }
+
+        .section-content {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .section-content ul li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .section-content ul li::before {
+            content: '▸';
+            color: #667eea;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .diagram-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .milestone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .milestone-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .milestone-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .milestone-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .milestone-card .date {
+            color: #764ba2;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .risk-item, .assumption-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .assumption-item {
+            border-left-color: #51cf66;
+        }
+
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .deliverable-category {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .deliverable-category h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .success-criteria {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .criteria-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #51cf66;
+        }
+
+        .quality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quality-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .quality-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header .subtitle {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 1.5em;
+            }
+
+            .milestone-grid,
+            .deliverables-grid,
+            .quality-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-wrapper {
+                height: 300px;
+            }
+        }
+
+        .scope-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .scope-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .in-scope {
+            border-left: 5px solid #51cf66;
+        }
+
+        .out-scope {
+            border-left: 5px solid #ff6b6b;
+        }
+
+        @media (max-width: 768px) {
+            .scope-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .two-column-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .two-column-diagram {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>🎮 FIGAmes</h1>
+        <div class="subtitle">Project Charter - Game Development Company Setup</div>
+        <div class="project-info">
+            <div class="info-box">
+                <strong>Tanggal Mulai</strong>
+                <div>1 Januari 2026</div>
+            </div>
+            <div class="info-box">
+                <strong>Durasi Proyek</strong>
+                <div>12 Bulan</div>
+            </div>
+            <div class="info-box">
+                <strong>Target Selesai</strong>
+                <div>31 Desember 2026</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Ringkasan Singkat -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">📋</span>
+                Ringkasan Singkat
+            </h2>
+            <div class="section-content">
+                <p>Project Charter ini mendefinisikan arah, ruang lingkup tingkat tinggi, keluaran (deliverables), serta ukuran keberhasilan proyek pengembangan perusahaan game FIGAmes—mencakup pembentukan fondasi organisasi, pipeline produksi, dan kemampuan teknis untuk mengembangkan beberapa genre/platform game secara berulang (repeatable).</p>
+            </div>
+        </div>
+
+        <!-- Tujuan Proyek dengan Diagram -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🎯</span>
+                Tujuan Proyek
+            </h2>
+            <div class="section-content">
+                <p><strong>Membangun FIGAmes sebagai perusahaan game yang siap produksi (production-ready) dalam 12 bulan</strong></p>
+            </div>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TB
+                    A[FIGAmes<br/>Production-Ready Company] --> B[Organisasi Inti]
+                    A --> C[Pipeline Standar]
+                    A --> D[Tooling & Infrastruktur]
+                    A --> E[Produk Game]
+                    A --> F[Standar Kualitas]
+
+                    B --> B1[Operasional]
+                    B --> B2[Kreatif]
+                    B --> B3[Engineering]
+
+                    C --> C1[Desain]
+                    C1 --> C2[Prototipe]
+                    C2 --> C3[Produksi]
+                    C3 --> C4[QA]
+                    C4 --> C5[Rilis]
+                    C5 --> C6[Operasi Pasca Rilis]
+
+                    D --> D1[Multi-Genre<br/>casual, action, puzzle]
+                    D --> D2[Multi-Platform<br/>PC/Mobile]
+
+                    E --> E1[Minimal 1 Game<br/>Siap Rilis]
+
+                    F --> F1[Kualitas]
+                    F --> F2[Keamanan]
+                    F --> F3[Performa]
+
+                    style A fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#fff
+                    style B fill:#51cf66,stroke:#37b24d,stroke-width:2px
+                    style C fill:#51cf66,stroke:#37b24d,stroke-width:2px
+                    style D fill:#51cf66,stroke:#37b24d,stroke-width:2px
+                    style E fill:#51cf66,stroke:#37b24d,stroke-width:2px
+                    style F fill:#51cf66,stroke:#37b24d,stroke-width:2px
+                </div>
+            </div>
+        </div>
+
+        <!-- Kebutuhan Bisnis -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🏢</span>
+                Kebutuhan Bisnis
+            </h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph LR
+                    A[Kebutuhan Bisnis<br/>FIGAmes] --> B[Masuk Pasar<br/>Terstruktur]
+                    A --> C[Mengurangi Risiko<br/>Kegagalan]
+                    A --> D[Percepat<br/>Time-to-Market]
+                    A --> E[Fondasi<br/>Kolaborasi]
+
+                    B --> B1[Dapat Diskalakan]
+                    C --> C1[Proses Konsisten]
+                    D --> D1[Bukan Sekali Jadi]
+                    E --> E1[Publisher]
+                    E --> E2[Investor]
+                    E --> E3[Outsourcing]
+                    E --> E4[Komunitas]
+
+                    style A fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#fff
+                    style B fill:#4dabf7,stroke:#339af0,stroke-width:2px
+                    style C fill:#4dabf7,stroke:#339af0,stroke-width:2px
+                    style D fill:#4dabf7,stroke:#339af0,stroke-width:2px
+                    style E fill:#4dabf7,stroke:#339af0,stroke-width:2px
+                </div>
+            </div>
+        </div>
+
+        <!-- Konteks Proyek -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🌍</span>
+                Konteks Proyek
+            </h2>
+            <div class="section-content">
+                <p><strong>FIGAmes akan dibangun sebagai studio yang:</strong></p>
+                <ul>
+                    <li>Mengandalkan praktik modern game development (iteratif, data-informed, CI/CD bila relevan)</li>
+                    <li>Mengembangkan kemampuan inti: game design, programming, art pipeline, audio integration, QA, dan release management</li>
+                    <li>Beroperasi dengan struktur kerja yang jelas (mis. Agile/Scrum atau hybrid milestone-based) agar milestone 1 tahun realistis dicapai</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ruang Lingkup dengan Diagram -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🧩</span>
+                Ruang Lingkup Proyek
+            </h2>
+            <div class="two-column-diagram">
+                <div class="diagram-container">
+                    <h3 style="color: #51cf66; text-align: center; margin-bottom: 20px;">✅ In Scope</h3>
+                    <div class="mermaid">
+                        graph TD
+                        A[In Scope] --> B[Organisasi &<br/>Operasional]
+                        A --> C[Teknologi &<br/>Infrastruktur]
+                        A --> D[Pipeline<br/>Produksi Konten]
+                        A --> E[Pengembangan<br/>Game Pertama]
+                        A --> F[QA & Release<br/>Readiness]
+
+                        B --> B1[Struktur Tim]
+                        B --> B2[SOP & Dokumen]
+
+                        C --> C1[Engine Selection]
+                        C --> C2[Version Control]
+                        C --> C3[Build Pipeline]
+
+                        D --> D1[Asset Creation]
+                        D --> D2[Library Internal]
+
+                        E --> E1[Konsep → Rilis]
+                        E --> E2[Store Listing]
+
+                        F --> F1[Test Plan]
+                        F --> F2[Checklist Rilis]
+
+                        style A fill:#51cf66,stroke:#37b24d,stroke-width:3px,color:#fff
+                        style B fill:#d3f9d8,stroke:#51cf66,stroke-width:2px
+                        style C fill:#d3f9d8,stroke:#51cf66,stroke-width:2px
+                        style D fill:#d3f9d8,stroke:#51cf66,stroke-width:2px
+                        style E fill:#d3f9d8,stroke:#51cf66,stroke-width:2px
+                        style F fill:#d3f9d8,stroke:#51cf66,stroke-width:2px
+                    </div>
+                </div>
+                <div class="diagram-container">
+                    <h3 style="color: #ff6b6b; text-align: center; margin-bottom: 20px;">🚫 Out of Scope</h3>
+                    <div class="mermaid">
+                        graph TD
+                        A[Out of Scope] --> B[>1 Game<br/>Full-Release]
+                        A --> C[Ekspansi Tim<br/>Global]
+                        A --> D[Build Engine<br/>dari Nol]
+                        A --> E[Live-Ops<br/>Skala Besar]
+                        A --> F[Marketing<br/>Berskala Besar]
+
+                        B --> B1[Fokus 1 Game<br/>Berkualitas]
+
+                        C --> C1[Multi-Studio<br/>Internasional]
+
+                        D --> D1[Gunakan Engine<br/>Existing]
+
+                        E --> E1[MMO Backend<br/>Kompleks]
+
+                        F --> F1[TV/OOH<br/>Campaign]
+
+                        style A fill:#ff6b6b,stroke:#fa5252,stroke-width:3px,color:#fff
+                        style B fill:#ffe3e3,stroke:#ff6b6b,stroke-width:2px
+                        style C fill:#ffe3e3,stroke:#ff6b6b,stroke-width:2px
+                        style D fill:#ffe3e3,stroke:#ff6b6b,stroke-width:2px
+                        style E fill:#ffe3e3,stroke:#ff6b6b,stroke-width:2px
+                        style F fill:#ffe3e3,stroke:#ff6b6b,stroke-width:2px
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hasil Proyek dengan Diagram -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">📦</span>
+                Hasil Proyek (Deliverables)
+            </h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    graph TB
+                    A[Deliverables] --> B[📄 Dokumen &<br/>Tata Kelola]
+                    A --> C[🛠️ Tooling &<br/>Infrastruktur]
+                    A --> D[🎨 Pipeline<br/>Konten]
+                    A --> E[🎮 Produk]
+                    A --> F[✅ QA & Rilis]
+
+                    B --> B1[Operating Model]
+                    B --> B2[Standar Desain]
+                    B --> B3[Standar Engineering]
+
+                    C --> C1[Repo & Template]
+                    C --> C2[CI/Build Pipeline]
+                    C --> C3[Issue Tracking]
+
+                    D --> D1[Art Pipeline]
+                    D --> D2[Library Aset]
+                    D --> D3[Standar Optimasi]
+
+                    E --> E1[Prototipe]
+                    E --> E2[Vertical Slice]
+                    E --> E3[Release Candidate]
+
+                    F --> F1[Test Plan]
+                    F --> F2[Release Checklist]
+                    F --> F3[Prosedur Patch]
+
+                    style A fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#fff
+                    style B fill:#ffd43b,stroke:#fab005,stroke-width:2px
+                    style C fill:#74c0fc,stroke:#339af0,stroke-width:2px
+                    style D fill:#ff8787,stroke:#fa5252,stroke-width:2px
+                    style E fill:#a9e34b,stroke:#82c91e,stroke-width:2px
+                    style F fill:#da77f2,stroke:#cc5de8,stroke-width:2px
+                </div>
+            </div>
+        </div>
+
+        <!-- Kriteria Keberhasilan dengan Chart -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">✅</span>
+                Kriteria Keberhasilan
+            </h2>
+            <div class="diagram-container">
+                <div class="chart-wrapper">
+                    <canvas id="successChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Persyaratan Kualitas dengan Radar Chart -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🧪</span>
+                Persyaratan Kualitas
+            </h2>
+            <div class="diagram-container">
+                <div class="chart-wrapper">
+                    <canvas id="qualityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Milestones dengan Gantt-style -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🗺️</span>
+                Tonggak Pencapaian (Milestones)
+            </h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    gantt
+                    title Timeline Proyek FIGAmes 2026
+                    dateFormat YYYY-MM-DD
+                    section Fase Awal
+                    Kickoff Proyek           :milestone, m1, 2026-01-01, 0d
+                    Tooling & Pipeline       :a1, 2026-01-01, 2026-02-28
+                    section Konsep & Desain
+                    Konsep Game Terkunci     :milestone, m2, 2026-03-31, 0d
+                    Prototipe Playable       :a2, 2026-03-01, 2026-05-31
+                    section Produksi
+                    Vertical Slice           :milestone, m3, 2026-08-31, 0d
+                    Content Production       :a3, 2026-06-01, 2026-10-31
+                    section Finalisasi
+                    Beta + Hardening         :a4, 2026-11-01, 2026-11-30
+                    Release Candidate        :milestone, m4, 2026-12-31, 0d
+                </div>
+            </div>
+            <div class="milestone-grid">
+                <div class="milestone-card">
+                    <h4>1. Kickoff Proyek</h4>
+                    <div class="date">📅 1 Januari 2026</div>
+                    <p>Visi, target, peran inti, dan cara kerja disepakati</p>
+                </div>
+                <div class="milestone-card">
+                    <h4>2. Tooling & Pipeline Dasar</h4>
+                    <div class="date">📅 Akhir Februari 2026</div>
+                    <p>Engine dipilih, repo + branching siap, issue tracker aktif, build dasar berjalan</p>
+                </div>
+                <div class="milestone-card">
+                    <h4>3. Konsep Game Terkunci</h4>
+                    <div class="date">📅 Akhir Maret 2026</div>
+                    <p>GDD ringkas, target platform, target audience, core loop disepakati</p>
+                </div>
+                <div class="milestone-card">
+                    <h4>4. Prototipe Playable</h4>
+                    <div class="date">📅 Akhir Mei 2026</div>
+                    <p>Core loop bisa dimainkan, feedback awal terkumpul, keputusan lanjut/ubah dibuat</p>
+                </div>
+                <div class="milestone-card">
+                    <h4>5. Vertical Slice</h4>
+                    <div class="date">📅 Akhir Agustus 2026</div>
+                    <p>Contoh kualitas final (art+audio+UX) untuk subset konten</p>
+                </div>
+                <div class="milestone-card">
+                    <h4>6. Content Production & Alpha</h4>
+                    <div class="date">📅 Akhir Oktober 2026</div>
+                    <p>Sebagian besar fitur ada, fokus stabilisasi</p>
+                </div>
+                <div class="milestone-card">
+                    <h4>7. Beta + Hardening</h4>
+                    <div class="date">📅 Akhir November 2026</div>
+                    <p>QA intensif, balancing, performa, persiapan rilis</p>
+                </div>
+                <div class="milestone-card">
+                    <h4>8. Release Candidate / Rilis</h4>
+                    <div class="date">📅 Akhir Desember 2026</div>
+                    <p>Kandidat rilis siap submit atau rilis resmi</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risiko dengan Chart -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">⚠️</span>
+                Risiko Tingkat Tinggi
+            </h2>
+            <div class="diagram-container">
+                <div class="chart-wrapper">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+            <div class="section-content" style="margin-top: 20px;">
+                <div class="risk-item">
+                    <strong>Scope Creep</strong>
+                    <p>"Berbagai jenis game" bisa melebar; perlu prioritas capability yang realistis</p>
+                </div>
+                <div class="risk-item">
+                    <strong>Kekurangan Talenta Kunci</strong>
+                    <p>Terutama tech lead, game designer, dan pipeline artist/TA</p>
+                </div>
+                <div class="risk-item">
+                    <strong>Keputusan Engine/Tooling Terlambat</strong>
+                    <p>Menghambat produktivitas berbulan-bulan</p>
+                </div>
+                <div class="risk-item">
+                    <strong>Underestimation Produksi Konten</strong>
+                    <p>Art/audio sering memakan waktu lebih panjang dari perkiraan</p>
+                </div>
+                <div class="risk-item">
+                    <strong>Ketidakjelasan Target Platform</strong>
+                    <p>Berdampak pada performa, UI, dan kontrol</p>
+                </div>
+                <div class="risk-item">
+                    <strong>QA Terlambat Masuk</strong>
+                    <p>Bug menumpuk di akhir dan mengancam jadwal rilis</p>
+                </div>
+                <div class="risk-item">
+                    <strong>Risiko Legal/Lisensi Aset</strong>
+                    <p>Penggunaan aset tanpa lisensi yang jelas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asumsi -->
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🧠</span>
+                Asumsi
+            </h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+                    mindmap
+                    root((Asumsi<br/>Proyek))
+                    Tim Stabil
+                    Tim inti tersedia
+                    Tidak berubah drastis
+                    Anggaran Memadai
+                    Tooling & lisensi
+                    Perangkat kerja
+                    Keputusan Cepat
+                    Engine dipilih 1-3 bulan
+                    Platform target jelas
+                    Genre game ditentukan
+                    Akses Testing
+                    Uji pengguna internal
+                    Komunitas kecil
+                    Definisi Jelas
+                    Vertical slice vs rilis
+                    Kesepakatan manajemen
+                </div>
+            </div>
+            <div class="section-content" style="margin-top: 20px;">
+                <div class="assumption-item">
+                    <strong>Tim Inti Stabil</strong>
+                    <p>Tim inti minimal tersedia dan stabil (tidak berubah drastis di tengah proyek)</p>
+                </div>
+                <div class="assumption-item">
+                    <strong>Anggaran Memadai</strong>
+                    <p>Anggaran tooling, lisensi, dan perangkat kerja memadai</p>
+                </div>
+                <div class="assumption-item">
+                    <strong>Keputusan Kunci Cepat</strong>
+                    <p>Keputusan kunci (engine, platform target, genre game pertama) dibuat di 1–3 bulan awal</p>
+                </div>
+                <div class="assumption-item">
+                    <strong>Akses Uji Pengguna</strong>
+                    <p>Ada akses ke uji pengguna (internal/komunitas kecil) untuk validasi prototipe</p>
+                </div>
+                <div class="assumption-item">
+                    <strong>Definisi "Selesai" Jelas</strong>
+                    <p>Manajemen menyepakati definisi "selesai" untuk game pertama (vertical slice vs rilis penuh)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p><strong>FIGAmes Project Charter</strong></p>
+        <p>© 2026 FIGAmes - Game Development Company</p>
+        <p style="margin-top: 10px; font-size: 0.85em; opacity: 0.8;">
+            Dokumen ini bersifat rahasia dan hanya untuk penggunaan internal
+        </p>
+    </div>
+</div>
+
+<script>
+    // Initialize Mermaid
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        themeVariables: {
+            primaryColor: '#667eea',
+            primaryTextColor: '#fff',
+            primaryBorderColor: '#764ba2',
+            lineColor: '#667eea',
+            secondaryColor: '#51cf66',
+            tertiaryColor: '#ffd43b'
+        }
+    });
+
+    // Success Criteria Chart
+    const successCtx = document.getElementById('successChart').getContext('2d');
+    new Chart(successCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                'Pipeline Stabil',
+                'Kualitas Game',
+                'Build Terjadwal',
+                'Dokumentasi Lengkap',
+                'Milestone Tercapai'
+            ],
+            datasets: [{
+                label: 'Target Keberhasilan (%)',
+                data: [100, 100, 100, 100, 100],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(81, 207, 102, 0.8)',
+                    'rgba(255, 212, 59, 0.8)',
+                    'rgba(116, 192, 252, 0.8)',
+                    'rgba(218, 119, 242, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(102, 126, 234, 1)',
+                    'rgba(81, 207, 102, 1)',
+                    'rgba(255, 212, 59, 1)',
+                    'rgba(116, 192, 252, 1)',
+                    'rgba(218, 119, 242, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Kriteria Keberhasilan Proyek',
+                    font: {
+                        size: 18
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Quality Requirements Radar Chart
+    const qualityCtx = document.getElementById('qualityChart').getContext('2d');
+    new Chart(qualityCtx, {
+        type: 'radar',
+        data: {
+            labels: ['Stabilitas', 'Performa', 'Maintainability', 'Usability/UX', 'Compliance'],
+            datasets: [{
+                label: 'Target Kualitas',
+                data: [95, 90, 85, 90, 100],
+                backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 2,
+                pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Persyaratan Kualitas (Target %)',
+                    font: {
+                        size: 18
+                    }
+                }
+            },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        stepSize: 20
+                    }
+                }
+            }
+        }
+    });
+
+    // Risk Assessment Chart
+    const riskCtx = document.getElementById('riskChart').getContext('2d');
+    new Chart(riskCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                'Scope Creep',
+                'Kekurangan Talenta',
+                'Keputusan Terlambat',
+                'Underestimation Konten',
+                'Target Platform Tidak Jelas',
+                'QA Terlambat',
+                'Risiko Legal'
+            ],
+            datasets: [{
+                label: 'Tingkat Risiko',
+                data: [20, 18, 15, 17, 12, 10, 8],
+                backgroundColor: [
+                    'rgba(255, 107, 107, 0.8)',
+                    'rgba(250, 82, 82, 0.8)',
+                    'rgba(255, 135, 135, 0.8)',
+                    'rgba(255, 168, 168, 0.8)',
+                    'rgba(255, 184, 184, 0.8)',
+                    'rgba(255, 201, 201, 0.8)',
+                    'rgba(255, 219, 219, 0.8)'
+                ],
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+                title: {
+                    display: true,
+                    text: 'Distribusi Risiko Proyek',
+                    font: {
+                        size: 18
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
