@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Merger</title>
+    <meta
+      name="description"
+      content="Gabungkan PDF dan gambar menjadi satu file PDF langsung di browser."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Browser-only PDF toolkit</p>
+          <h1>PDF Merger modern untuk PDF, JPG, JPEG, PNG, dan WEBP.</h1>
+          <p class="hero-text">
+            Upload banyak file, atur urutannya, lalu gabungkan semua file menjadi satu PDF
+            langsung di browser tanpa backend.
+          </p>
+          <div class="hero-badges" aria-label="Fitur utama">
+            <span>Drag & drop</span>
+            <span>Reorder</span>
+            <span>Preview</span>
+            <span>Image to PDF</span>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="hero-stat">
+            <strong>100%</strong>
+            <span>diproses lokal di browser</span>
+          </div>
+          <div class="hero-stat">
+            <strong>5</strong>
+            <span>format input yang didukung</span>
+          </div>
+          <div class="hero-stat">
+            <strong>1 file</strong>
+            <span>hasil download merged-document.pdf</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="panel upload-panel">
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload file PDF atau gambar">
+            <input id="fileInput" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp" hidden />
+            <div class="dropzone-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v12" />
+                <path d="m7 8 5-5 5 5" />
+                <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
+              </svg>
+            </div>
+            <h2>Tarik file ke sini atau klik untuk memilih</h2>
+            <p>Hanya menerima PDF, JPG, JPEG, PNG, dan WEBP. File lain akan ditolak.</p>
+            <button type="button" class="primary-button">Pilih file</button>
+          </div>
+
+          <div id="statusBanner" class="status-banner" aria-live="polite"></div>
+
+          <div class="action-row">
+            <button id="clearButton" type="button" class="secondary-button" disabled>Bersihkan daftar</button>
+            <button id="mergeButton" type="button" class="primary-button" disabled>Gabungkan PDF</button>
+          </div>
+        </div>
+
+        <div class="panel preview-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Daftar file</h2>
+              <p>Urutkan file dengan drag and drop atau tombol pindah.</p>
+            </div>
+            <span id="fileCount" class="counter">0 file</span>
+          </div>
+
+          <ul id="fileList" class="file-list" aria-label="Daftar file yang akan digabung"></ul>
+          <div id="emptyState" class="empty-state">
+            <p>Belum ada file. Tambahkan PDF atau gambar untuk mulai menggabungkan.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <template id="fileItemTemplate">
+      <li class="file-item" draggable="true">
+        <div class="file-preview"></div>
+        <div class="file-meta">
+          <div class="file-title-row">
+            <h3 class="file-name"></h3>
+            <span class="file-type"></span>
+          </div>
+          <p class="file-size"></p>
+          <div class="file-actions">
+            <button type="button" class="ghost-button move-up-button">Naik</button>
+            <button type="button" class="ghost-button move-down-button">Turun</button>
+            <button type="button" class="ghost-button danger remove-button">Hapus</button>
+          </div>
+        </div>
+      </li>
+    </template>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
