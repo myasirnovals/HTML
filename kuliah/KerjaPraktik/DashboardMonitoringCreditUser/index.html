@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Credit Monitoring — QA Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="head">
+  <div>
+    <h1>AI Credit Monitoring <span class="badge">QA Dashboard</span></h1>
+    <p>Pantau konsumsi kredit, performa model, & akar penyebab kegagalan generasi AI</p>
+  </div>
+  <div class="filters">
+    <input type="text" placeholder="🔍 Cari user, model, error...">
+    <select id="fModel"><option>Semua Model</option><option>qwen2/image-edit</option><option>wan/2-7-image-to-video</option><option>flux/dev</option></select>
+    <select id="fRange"><option>7 Hari Terakhir</option><option>30 Hari</option><option>90 Hari</option></select>
+  </div>
+</div>
+
+<!-- KPI CARDS -->
+<div class="grid kpis">
+  <div class="card kpi">
+    <div class="label"><span class="dot" style="background:var(--blue)"></span>Total Kredit Awal</div>
+    <div class="val">48,200 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+    <div class="sub up">▲ Alokasi 24 user aktif</div>
+  </div>
+  <div class="card kpi">
+    <div class="label"><span class="dot" style="background:var(--red)"></span>Kredit Terpakai</div>
+    <div class="val">31,540 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+    <div class="sub down">▲ 65.4% terkonsumsi</div>
+  </div>
+  <div class="card kpi">
+    <div class="label"><span class="dot" style="background:var(--green)"></span>Sisa Kredit</div>
+    <div class="val">16,660 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+    <div class="sub up">Cukup untuk ±3 hari</div>
+  </div>
+  <div class="card kpi">
+    <div class="label"><span class="dot" style="background:var(--amber)"></span>Success Rate</div>
+    <div class="val warn">82.3%</div>
+    <div class="sub down">▼ Turun 6.1% dari minggu lalu</div>
+  </div>
+  <div class="card kpi">
+    <div class="label"><span class="dot" style="background:var(--red)"></span>Kredit Terbuang (Gagal)</div>
+    <div class="val down">4,120 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+    <div class="sub down">13.1% dari total pemakaian</div>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="grid charts">
+  <div class="card">
+    <div class="title-row"><h2>📈 Tren Pemakaian vs Kegagalan Kredit</h2></div>
+    <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="title-row"><h2>🥧 Distribusi Status</h2></div>
+    <div class="chart-wrap sm"><canvas id="doughnut"></canvas></div>
+  </div>
+</div>
+
+<!-- INSIGHT + MODEL -->
+<div class="grid charts">
+  <!-- QA Insight -->
+  <div class="insight">
+    <h2>⚠️ Analisis QA — Penyebab Success Rate Menurun</h2>
+    <ul>
+      <li><span>1.</span><div><b>wan/2-7-image-to-video</b> menyumbang <b>58% total kegagalan</b>. Mayoritas <span style="color:var(--amber)">Request Timeout (&gt;120s)</span> saat resolusi tinggi. → <b>Prioritas testing</b> pada payload video berdurasi panjang.</div></li>
+      <li><span>2.</span><div>Lonjakan error tanggal <b>21–22 Jul</b> berkorelasi dengan <span style="color:var(--red)">HTTP 503 dari provider KIE</span>. → Perlu <b>retry mechanism</b> & fallback model.</div></li>
+      <li><span>3.</span><div>Kredit tetap terpotong pada <b>~40% kasus gagal</b>. → Uji ulang <b>logika refund otomatis</b> saat status ≠ SUCCESS.</div></li>
+      <li><span>4.</span><div><b>qwen2/image-edit</b> stabil (success 96%). Aman dijadikan <b>baseline regresi</b>.</div></li>
+    </ul>
+  </div>
+  <!-- Model performance -->
+  <div class="card">
+    <div class="title-row"><h2>🧩 Performa per Model</h2></div>
+    <div id="modelList"></div>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="card">
+  <div class="title-row"><h2>📋 Riwayat Generasi & Diagnosa Error</h2></div>
+  <div style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>ID / Tanggal</th><th>Pengguna</th><th>Tipe / Model</th>
+          <th>Kredit</th><th>Status</th><th>Pesan Error / Diagnosa</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

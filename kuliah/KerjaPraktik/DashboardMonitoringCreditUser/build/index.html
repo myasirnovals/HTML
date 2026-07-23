@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<title>AI Credit Monitoring — QA Dashboard</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c5cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* =============================================
+   AI CREDIT MONITORING — PROGRESSIVE WEB APP
+   Responsive: Desktop + Mobile in one file
+   ============================================= */
+
+:root {
+  --bg: #0f1117;
+  --card: #181b24;
+  --card2: #1f2330;
+  --line: #282d3b;
+  --txt: #e6e9f0;
+  --muted: #8b93a7;
+  --purple: #7c5cff;
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --blue: #3b82f6;
+  --radius-card: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ========== UTILITY ========== */
+.up { color: var(--green); }
+.down { color: var(--red); }
+.warn { color: var(--amber); }
+
+/* ============================================================
+   DESKTOP LAYOUT (≥768px) — default
+   ============================================================ */
+
+/* --- HEADER --- */
+.desktop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px 24px 0;
+  margin-bottom: 24px;
+}
+
+.desktop-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.desktop-header .sub {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.badge {
+  background: rgba(124, 92, 255, 0.15);
+  color: var(--purple);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+select, input {
+  background: var(--card2);
+  border: 1px solid var(--line);
+  color: var(--txt);
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+input { min-width: 220px; }
+
+select:focus, input:focus {
+  border-color: var(--purple);
+}
+
+/* --- DESKTOP GRIDS --- */
+.desktop-content {
+  padding: 0 24px 24px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.kpis {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-bottom: 16px;
+}
+
+.charts {
+  grid-template-columns: 2fr 1fr;
+  margin-bottom: 16px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.card h3 {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.title-row h2 {
+  font-size: 16px;
+}
+
+/* --- DESKTOP KPI --- */
+.kpi .label {
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi .val {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0 4px;
+}
+
+.kpi .sub {
+  font-size: 12px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* --- MODEL BARS (desktop) --- */
+.model-row {
+  margin-bottom: 14px;
+}
+
+.model-row:last-child { margin-bottom: 0; }
+
+.model-row .top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.model-row .name {
+  font-weight: 600;
+}
+
+.bar {
+  height: 8px;
+  background: var(--card2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+}
+
+/* --- TABLE (desktop) --- */
+.desk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.desk-table th {
+  text-align: left;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.desk-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.desk-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.desk-table .user-cell b { display: block; }
+.desk-table .user-cell small { color: var(--muted); }
+
+/* --- INSIGHT (desktop) --- */
+.insight-box {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(245, 158, 11, 0.08));
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.insight-box h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.insight-box ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.insight-box li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.insight-box li span { color: var(--amber); font-weight: 700; }
+
+/* --- CHART WRAPPER --- */
+.chart-wrap {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+.chart-wrap.sm { height: 230px; }
+
+/* --- COMMON PILLS --- */
+.pill {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.pill.success { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+.pill.failed  { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+.pill.timeout { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+.pill.model   { background: rgba(124, 92, 255, 0.12); color: var(--purple); }
+
+.credit-used {
+  color: var(--red);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.err {
+  color: var(--red);
+  font-size: 12px;
+  max-width: 220px;
+}
+
+.err.ok { color: var(--muted); }
+
+/* ============================================================
+   MOBILE LAYOUT (<768px) — hidden by default, shown via media
+   ============================================================ */
+
+.mobile-header,
+.mobile-content {
+  display: none;
+}
+
+/* --- MOBILE TOP BAR --- */
+.top-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.top-bar h1 {
+  font-size: 18px;
+  font-weight: 700;
+  flex: 1;
+}
+
+.top-bar .badge-sm {
+  background: rgba(124, 92, 255, 0.15);
+  color: var(--purple);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.menu-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--txt);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* --- MOBILE SEARCH --- */
+.search-bar {
+  display: none;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  flex: 1;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  color: var(--txt);
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  min-width: 0;
+}
+
+.search-bar input:focus { border-color: var(--purple); }
+
+.search-bar select {
+  background: var(--card2);
+  border: 1px solid var(--line);
+  color: var(--txt);
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 80px;
+}
+
+/* --- MOBILE KPI SCROLL --- */
+.kpi-scroll {
+  display: none;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.kpi-scroll::-webkit-scrollbar { display: none; }
+
+.kpi-item {
+  flex: 0 0 155px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 14px;
+  scroll-snap-align: start;
+  min-height: 95px;
+}
+
+.kpi-item .kpi-label {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.kpi-item .kpi-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.kpi-item .kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.kpi-item .kpi-value small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.kpi-item .kpi-sub { font-size: 11px; }
+
+/* --- MOBILE CARD --- */
+.mobile-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.mobile-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mobile-card-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* --- MOBILE CHART --- */
+.chart-wrap-mobile {
+  position: relative;
+  height: 200px;
+  width: 100%;
+}
+
+.chart-wrap-mobile.sm { height: 160px; }
+
+/* --- SPLIT ROW (mobile) --- */
+.split-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.split-row .mobile-card {
+  flex: 1;
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.split-row .mobile-card:first-child { flex: 0 0 42%; }
+.split-row .mobile-card:last-child  { flex: 1; }
+
+/* --- MOBILE MODEL BARS --- */
+.model-row-mobile {
+  margin-bottom: 10px;
+}
+
+.model-row-mobile:last-child { margin-bottom: 0; }
+
+.model-row-mobile .model-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.model-row-mobile .model-name {
+  font-weight: 600;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 65%;
+}
+
+.model-row-mobile .model-stat {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.model-bar-wrap {
+  height: 5px;
+  background: var(--card2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.model-bar-wrap span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* --- MOBILE INSIGHT --- */
+.insight-box-mobile {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(245, 158, 11, 0.08));
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-card);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.insight-box-mobile h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.insight-box-mobile ul {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.insight-box-mobile li {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.insight-box-mobile li .num {
+  color: var(--amber);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* --- MOBILE TABLE --- */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -14px;
+  padding: 0 14px;
+}
+
+.mobile-table {
+  width: 100%;
+  min-width: 500px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.mobile-table th {
+  text-align: left;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 8px 8px 0;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.mobile-table td {
+  padding: 10px 8px 10px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.mobile-table tr:last-child td { border-bottom: none; }
+
+.mobile-table .u-name { display: block; font-size: 12px; }
+.mobile-table .u-mail { color: var(--muted); font-size: 10px; }
+.mobile-table .credit-red { color: var(--red); font-weight: 600; white-space: nowrap; }
+.mobile-table .err-msg { color: var(--red); font-size: 11px; max-width: 160px; }
+.mobile-table .err-msg.ok { color: var(--muted); }
+
+/* --- BOTTOM NAV --- */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  justify-content: space-around;
+  padding: 8px 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 10px;
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: color 0.2s;
+}
+
+.nav-item.active { color: var(--purple); }
+
+.nav-item .nav-icon { font-size: 20px; line-height: 1; }
+
+/* ============================================================
+   RESPONSIVE — MOBILE FIRST OVERRIDE
+   ============================================================ */
+
+/* Hide desktop, show mobile */
+@media (max-width: 767px) {
+  .desktop-header,
+  .desktop-content {
+    display: none;
+  }
+
+  body {
+    padding: 12px 12px 80px 12px;
+  }
+
+  .top-bar     { display: flex; }
+  .search-bar  { display: flex; }
+  .kpi-scroll  { display: flex; }
+  .bottom-nav  { display: flex; }
+
+  .mobile-header,
+  .mobile-content {
+    display: block;
+  }
+}
+
+/* Very small screens: split-row → stacked */
+@media (max-width: 380px) {
+  .split-row {
+    flex-direction: column;
+  }
+  .split-row .mobile-card:first-child {
+    flex: 1;
+  }
+  .chart-wrap-mobile.sm {
+    height: 180px;
+  }
+}
+
+/* Tablet: fine-tune */
+@media (min-width: 600px) and (max-width: 767px) {
+  body { padding: 20px 20px 80px; }
+  .kpi-item { flex: 0 0 180px; }
+  .split-row .mobile-card:first-child { flex: 0 0 38%; }
+}
+
+/* Large desktop: extra breathing room */
+@media (min-width: 1200px) {
+  .desktop-content {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     DESKTOP HEADER
+     ============================================================ -->
+<header class="desktop-header">
+  <div>
+    <h1>AI Credit Monitoring <span class="badge">QA Dashboard</span></h1>
+    <p class="sub">Pantau konsumsi kredit, performa model, & akar penyebab kegagalan generasi AI</p>
+  </div>
+  <div class="filters">
+    <input type="text" placeholder="🔍 Cari user, model, error...">
+    <select><option>Semua Model</option><option>qwen2/image-edit</option><option>wan/2-7-image-to-video</option><option>flux/dev</option></select>
+    <select><option>7 Hari Terakhir</option><option>30 Hari</option><option>90 Hari</option></select>
+  </div>
+</header>
+
+<!-- ============================================================
+     DESKTOP CONTENT
+     ============================================================ -->
+<main class="desktop-content">
+
+  <!-- KPI CARDS -->
+  <div class="grid kpis" id="desktopKpi">
+    <div class="card kpi">
+      <div class="label"><span class="dot" style="background:var(--blue)"></span>Total Kredit Awal</div>
+      <div class="val">48,200 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+      <div class="sub up">▲ Alokasi 24 user aktif</div>
+    </div>
+    <div class="card kpi">
+      <div class="label"><span class="dot" style="background:var(--red)"></span>Kredit Terpakai</div>
+      <div class="val">31,540 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+      <div class="sub down">▲ 65.4% terkonsumsi</div>
+    </div>
+    <div class="card kpi">
+      <div class="label"><span class="dot" style="background:var(--green)"></span>Sisa Kredit</div>
+      <div class="val">16,660 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+      <div class="sub up">Cukup untuk ±3 hari</div>
+    </div>
+    <div class="card kpi">
+      <div class="label"><span class="dot" style="background:var(--amber)"></span>Success Rate</div>
+      <div class="val warn">82.3%</div>
+      <div class="sub down">▼ Turun 6.1% dari minggu lalu</div>
+    </div>
+    <div class="card kpi">
+      <div class="label"><span class="dot" style="background:var(--red)"></span>Kredit Terbuang (Gagal)</div>
+      <div class="val down">4,120 <small style="font-size:14px;color:var(--muted)">Cr</small></div>
+      <div class="sub down">13.1% dari total pemakaian</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW -->
+  <div class="grid charts">
+    <div class="card">
+      <div class="title-row"><h2>📈 Tren Pemakaian vs Kegagalan Kredit</h2></div>
+      <div class="chart-wrap"><canvas id="lineChartDesktop"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="title-row"><h2>🥧 Distribusi Status</h2></div>
+      <div class="chart-wrap sm"><canvas id="doughnutDesktop"></canvas></div>
+    </div>
+  </div>
+
+  <!-- INSIGHT + MODEL -->
+  <div class="grid charts">
+    <div class="insight-box">
+      <h3>⚠️ Analisis QA — Penyebab Success Rate Menurun</h3>
+      <ul>
+        <li><span>1.</span><div><b>wan/2-7-image-to-video</b> menyumbang <b>58% total kegagalan</b>. Mayoritas <span style="color:var(--amber)">Request Timeout (>120s)</span> saat resolusi tinggi. → <b>Prioritas testing</b> pada payload video berdurasi panjang.</div></li>
+        <li><span>2.</span><div>Lonjakan error tanggal <b>21–22 Jul</b> berkorelasi dengan <span style="color:var(--red)">HTTP 503 dari provider KIE</span>. → Perlu <b>retry mechanism</b> & fallback model.</div></li>
+        <li><span>3.</span><div>Kredit tetap terpotong pada <b>~40% kasus gagal</b>. → Uji ulang <b>logika refund otomatis</b> saat status ≠ SUCCESS.</div></li>
+        <li><span>4.</span><div><b>qwen2/image-edit</b> stabil (success 96%). Aman dijadikan <b>baseline regresi</b>.</div></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="title-row"><h2>🧩 Performa per Model</h2></div>
+      <div id="modelListDesktop"></div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card" style="margin-top: 16px;">
+    <div class="title-row"><h2>📋 Riwayat Generasi & Diagnosa Error</h2></div>
+    <div style="overflow-x:auto">
+      <table class="desk-table">
+        <thead>
+          <tr>
+            <th>ID / Tanggal</th><th>Pengguna</th><th>Tipe / Model</th>
+            <th>Kredit</th><th>Status</th><th>Pesan Error / Diagnosa</th>
+          </tr>
+        </thead>
+        <tbody id="rowsDesktop"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     MOBILE HEADER
+     ============================================================ -->
+<div class="mobile-header">
+  <div class="top-bar">
+    <button class="menu-btn" aria-label="Menu">☰</button>
+    <h1>AI Credit <span class="badge-sm">QA</span></h1>
+    <button class="menu-btn" aria-label="Notifications">🔔</button>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" placeholder="🔍 Cari user, model, error...">
+    <select>
+      <option>7 Hari</option>
+      <option>30 Hari</option>
+      <option>90 Hari</option>
+    </select>
+  </div>
+
+  <div class="kpi-scroll" id="mobileKpiScroll">
+    <div class="kpi-item">
+      <div class="kpi-label"><span class="kpi-dot" style="background:var(--blue)"></span>Total Kredit Awal</div>
+      <div class="kpi-value">48,200 <small>Cr</small></div>
+      <div class="kpi-sub up">▲ 24 user aktif</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-label"><span class="kpi-dot" style="background:var(--red)"></span>Kredit Terpakai</div>
+      <div class="kpi-value">31,540 <small>Cr</small></div>
+      <div class="kpi-sub down">▲ 65.4%</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-label"><span class="kpi-dot" style="background:var(--green)"></span>Sisa Kredit</div>
+      <div class="kpi-value">16,660 <small>Cr</small></div>
+      <div class="kpi-sub up">±3 hari</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-label"><span class="kpi-dot" style="background:var(--amber)"></span>Success Rate</div>
+      <div class="kpi-value warn">82.3%</div>
+      <div class="kpi-sub down">▼ -6.1%</div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-label"><span class="kpi-dot" style="background:var(--red)"></span>Kredit Terbuang</div>
+      <div class="kpi-value down">4,120 <small>Cr</small></div>
+      <div class="kpi-sub down">13.1% pakai</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MOBILE CONTENT
+     ============================================================ -->
+<main class="mobile-content">
+
+  <div class="mobile-card">
+    <div class="mobile-card-header">
+      <h3>📈 Tren Pemakaian vs Kegagalan</h3>
+      <select style="background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:4px 8px;border-radius:8px;font-size:11px;outline:none;">
+        <option>7 Hari</option>
+      </select>
+    </div>
+    <div class="chart-wrap-mobile"><canvas id="lineChartMobile"></canvas></div>
+  </div>
+
+  <div class="insight-box-mobile">
+    <h3>⚠️ Analisis QA — Penyebab Sukses Menurun</h3>
+    <ul>
+      <li><span class="num">1</span><div><b>wan/2-7-image-to-video</b> menyumbang <b>58% kegagalan</b>. Mayoritas <span style="color:var(--amber)">Request Timeout (>120s)</span> resolusi tinggi.</div></li>
+      <li><span class="num">2</span><div>Lonjakan error <b>21-22 Jul</b> korelasi <span style="color:var(--red)">HTTP 503</span> dari KIE. Perlu <b>retry mechanism</b>.</div></li>
+      <li><span class="num">3</span><div>Kredit terpotong pada <b>~40% kasus gagal</b>. Uji <b>refund otomatis</b> saat ≠ SUCCESS.</div></li>
+      <li><span class="num">4</span><div><b>qwen2/image-edit</b> stabil (96%). Jadi <b>baseline regresi</b>.</div></li>
+    </ul>
+  </div>
+
+  <div class="split-row">
+    <div class="mobile-card">
+      <div class="mobile-card-header"><h3>🥧 Status</h3></div>
+      <div class="chart-wrap-mobile sm"><canvas id="doughnutMobile"></canvas></div>
+    </div>
+    <div class="mobile-card">
+      <div class="mobile-card-header"><h3>🧩 Performa Model</h3></div>
+      <div id="modelListMobile"></div>
+    </div>
+  </div>
+
+  <div class="mobile-card">
+    <div class="mobile-card-header">
+      <h3>📋 Riwayat Generasi & Error</h3>
+      <span style="font-size:11px;color:var(--muted)">Geser →</span>
+    </div>
+    <div class="table-scroll">
+      <table class="mobile-table">
+        <thead>
+          <tr>
+            <th>ID / Tgl</th><th>Pengguna</th><th>Tipe / Model</th>
+            <th>Kredit</th><th>Status</th><th>Error</th>
+          </tr>
+        </thead>
+        <tbody id="rowsMobile"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-item active">
+    <span class="nav-icon">📊</span>
+    <span>Dashboard</span>
+  </button>
+  <button class="nav-item">
+    <span class="nav-icon">📋</span>
+    <span>Riwayat</span>
+  </button>
+  <button class="nav-item">
+    <span class="nav-icon">🧩</span>
+    <span>Model</span>
+  </button>
+  <button class="nav-item">
+    <span class="nav-icon">⚙️</span>
+    <span>Setting</span>
+  </button>
+</nav>
+
+<script>
+
+const days = ['17 Jul', '18 Jul', '19 Jul', '20 Jul', '21 Jul', '22 Jul', '23 Jul'];
+const usage   = [3200, 4100, 3800, 4600, 5200, 5900, 4740];
+const wasted  = [180, 240, 210, 380, 920, 1180, 610];
+const failRate = [4, 6, 5, 8, 18, 22, 13];
+
+const models = [
+  { name: 'wan/2-7-image-to-video', total: 210, fail: 88, color: '#ef4444' },
+  { name: 'qwen2/image-edit',       total: 340, fail: 14, color: '#22c55e' },
+  { name: 'flux/dev',               total: 150, fail: 26, color: '#f59e0b' },
+  { name: 'sdxl/turbo',             total: 95,  fail: 9,  color: '#3b82f6' },
+];
+
+const logs = [
+  { id: '#AI-1521', date: '23 Jul 06:31', user: 'Omcuki', mail: 'curhatantofix@gmail.com', type: 'IMAGE TO IMAGE', model: 'qwen2/image-edit', used: 6, status: 'success', err: '' },
+  { id: '#AI-1520', date: '23 Jul 06:28', user: 'thomasbenson', mail: 'thomasben2806@gmail.com', type: 'IMAGE TO VIDEO', model: 'wan/2-7-image-to-video', used: 160, status: 'timeout', err: 'Request Timeout — provider tidak merespons dalam 120s (durasi video 8s @720p)' },
+  { id: '#AI-1519', date: '22 Jul 23:14', user: 'rania.dev', mail: 'rania@studio.id', type: 'IMAGE TO VIDEO', model: 'wan/2-7-image-to-video', used: 160, status: 'failed', err: 'HTTP 503 Service Unavailable dari KIE upstream' },
+  { id: '#AI-1518', date: '22 Jul 21:02', user: 'bagus_p', mail: 'bagus.p@gmail.com', type: 'TEXT TO IMAGE', model: 'flux/dev', used: 12, status: 'failed', err: 'NSFW content flagged — output diblokir moderation filter' },
+  { id: '#AI-1517', date: '22 Jul 19:47', user: 'linda_qa', mail: 'linda@team.co', type: 'IMAGE TO IMAGE', model: 'qwen2/image-edit', used: 6, status: 'success', err: '' },
+  { id: '#AI-1516', date: '22 Jul 18:20', user: 'thomasbenson', mail: 'thomasben2806@gmail.com', type: 'IMAGE TO VIDEO', model: 'wan/2-7-image-to-video', used: 160, status: 'timeout', err: 'Request Timeout — antrian GPU penuh (queue depth 34)' },
+  { id: '#AI-1515', date: '22 Jul 15:10', user: 'devi.art', mail: 'devi@art.io', type: 'TEXT TO IMAGE', model: 'sdxl/turbo', used: 4, status: 'success', err: '' },
+  { id: '#AI-1514', date: '21 Jul 22:33', user: 'Omcuki', mail: 'curhatantofix@gmail.com', type: 'TEXT TO IMAGE', model: 'flux/dev', used: 12, status: 'failed', err: 'Invalid dimension: 1536x1536 melebihi batas model (max 1024)' },
+];
+
+/* ---------- RENDER MODEL BARS (desktop) ---------- */
+const mlDesk = document.getElementById('modelListDesktop');
+if (mlDesk) {
+  models.forEach(m => {
+    const pct = Math.round(m.fail / m.total * 100);
+    mlDesk.innerHTML += `
+      <div class="model-row">
+        <div class="top">
+          <span class="name">${m.name}</span>
+          <span style="color:${pct > 25 ? '#ef4444' : pct > 10 ? '#f59e0b' : '#22c55e'}">${pct}% gagal · ${m.total} req</span>
+        </div>
+        <div class="bar"><span style="width:${pct}%;background:${m.color}"></span></div>
+      </div>`;
+  });
+}
+
+/* ---------- RENDER MODEL BARS (mobile) ---------- */
+const mlMob = document.getElementById('modelListMobile');
+if (mlMob) {
+  models.forEach(m => {
+    const pct = Math.round(m.fail / m.total * 100);
+    mlMob.innerHTML += `
+      <div class="model-row-mobile">
+        <div class="model-top">
+          <span class="model-name">${m.name}</span>
+          <span class="model-stat" style="color:${pct > 25 ? '#ef4444' : pct > 10 ? '#f59e0b' : '#22c55e'}">${pct}% · ${m.total} req</span>
+        </div>
+        <div class="model-bar-wrap"><span style="width:${pct}%;background:${m.color}"></span></div>
+      </div>`;
+  });
+}
+
+/* ---------- RENDER TABLE (desktop) ---------- */
+const tbDesk = document.getElementById('rowsDesktop');
+if (tbDesk) {
+  logs.forEach(l => {
+    tbDesk.innerHTML += `
+      <tr>
+        <td><b>${l.id}</b><br><small style="color:var(--muted)">${l.date}</small></td>
+        <td class="user-cell"><b>${l.user}</b><small>${l.mail}</small></td>
+        <td><span class="pill model">${l.type}</span><br><small style="color:var(--muted)">${l.model}</small></td>
+        <td class="credit-used">-${l.used} Cr</td>
+        <td><span class="pill ${l.status}">${l.status.toUpperCase()}</span></td>
+        <td class="err ${l.err ? '' : 'ok'}">${l.err || '—'}</td>
+      </tr>`;
+  });
+}
+
+/* ---------- RENDER TABLE (mobile) ---------- */
+const tbMob = document.getElementById('rowsMobile');
+if (tbMob) {
+  const shortLogs = logs.map(l => ({
+    ...l,
+    date: l.date.replace('Jul ', '/').replace(' 0', ' ').trim().slice(0, 8),
+    type: l.type === 'IMAGE TO IMAGE' ? 'IMG2IMG' : l.type === 'IMAGE TO VIDEO' ? 'IMG2VID' : l.type === 'TEXT TO IMAGE' ? 'TXT2IMG' : l.type,
+    err: l.err ? l.err.slice(0, 35) + (l.err.length > 35 ? '…' : '') : ''
+  }));
+  shortLogs.forEach(l => {
+    tbMob.innerHTML += `
+      <tr>
+        <td><b style="font-size:11px">${l.id}</b><br><small style="color:var(--muted);font-size:10px">${l.date}</small></td>
+        <td><span class="u-name">${l.user}</span><span class="u-mail">${l.mail}</span></td>
+        <td><span class="pill model">${l.type}</span><br><small style="color:var(--muted);font-size:10px">${l.model}</small></td>
+        <td class="credit-red">-${l.used} Cr</td>
+        <td><span class="pill ${l.status}">${l.status.toUpperCase()}</span></td>
+        <td class="err-msg ${l.err ? '' : 'ok'}">${l.err || '—'}</td>
+      </tr>`;
+  });
+}
+
+/* ---------- CHARTS ---------- */
+Chart.defaults.color = '#8b93a7';
+Chart.defaults.font.family = "-apple-system, 'Segoe UI', sans-serif";
+
+function makeLineChart(canvasId, isMobile) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: [
+        { label: isMobile ? 'Terpakai' : 'Kredit Terpakai', data: usage, borderColor: '#7c5cff', backgroundColor: 'rgba(124,92,255,.12)', fill: true, tension: isMobile ? 0.3 : 0.35, pointRadius: isMobile ? 2 : 3, borderWidth: isMobile ? 2 : 1.5 },
+        { label: isMobile ? 'Terbuang' : 'Kredit Terbuang (Gagal)', data: wasted, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.10)', fill: true, tension: isMobile ? 0.3 : 0.35, pointRadius: isMobile ? 2 : 3, borderWidth: isMobile ? 2 : 1.5 },
+        { label: '% Gagal', data: failRate, borderColor: '#f59e0b', borderDash: [4, 3], yAxisID: 'y1', tension: isMobile ? 0.3 : 0.35, pointRadius: isMobile ? 2 : 3, borderWidth: isMobile ? 2 : 1.5 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { usePointStyle: true, boxWidth: isMobile ? 6 : 8, padding: isMobile ? 8 : 12, font: { size: isMobile ? 10 : 12 } },
+          align: isMobile ? 'start' : 'center'
+        }
+      },
+      scales: {
+        y: { grid: { color: '#282d3b' }, title: isMobile ? { display: false } : { display: true, text: 'Kredit' }, ticks: { font: { size: isMobile ? 10 : 11 } } },
+        y1: { position: 'right', grid: { display: false }, min: 0, max: 40, title: isMobile ? { display: false } : { display: true, text: '% Gagal' }, ticks: { font: { size: isMobile ? 10 : 11 } } },
+        x: { grid: { color: '#282d3b' }, ticks: { font: { size: isMobile ? 9 : 11 } } }
+      }
+    }
+  });
+}
+
+function makeDoughnut(canvasId, isMobile) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Success', 'Timeout', 'Failed'],
+      datasets: [{ data: [82.3, 9.4, 8.3], backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'], borderWidth: 0 }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: isMobile ? '60%' : '65%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { usePointStyle: true, boxWidth: isMobile ? 6 : 8, padding: isMobile ? 6 : 15, font: { size: isMobile ? 9 : 12 } }
+        }
+      }
+    }
+  });
+}
+
+makeLineChart('lineChartDesktop', false);
+makeLineChart('lineChartMobile', true);
+makeDoughnut('doughnutDesktop', false);
+makeDoughnut('doughnutMobile', true);
+
+/* ---------- SERVICE WORKER ---------- */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log('SW registered'))
+    .catch(() => console.log('SW registration failed'));
+}
+</script>
+</body>
+</html>
+
